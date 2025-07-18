@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/redux@4.2.1/dist/redux.min.js"></script>
+    <script>
+    function counterReducer(state=0,action){
+        switch(action.type){
+            case "increment":
+                return state+1
+            case "decrement":
+                if(state==0){
+                    return state
+                }
+                return state-1
+            default:
+                return state        
+        }
+    }
+
+    const logger=store=>next=>action=>{
+        console.log("action:",action)
+        const result=next(action)
+        console.log("Updated state:",store.getState())
+        return result
+    }
+    const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
+
+    const store=Redux.createStore(counterReducer,composeEnhancer(Redux.applyMiddleware(logger)))
+    store.dispatch({type:"increment"})
+    store.dispatch({type:"increment"})
+    store.dispatch({type:"decrement"})
+    store.dispatch({ type: "increment" });
+store.dispatch({ type: "decrement" });
+
+
+</script>
+</body>
+
+</html>
